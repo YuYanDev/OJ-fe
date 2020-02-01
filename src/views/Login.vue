@@ -49,6 +49,7 @@ export default {
   methods:{
     logIn() {
       window.console.log("username:",this.form.username,"password:",this.form.password)
+      this.$router.push('/');
     },
     getData(){
       fetchData({}).then(v => {
