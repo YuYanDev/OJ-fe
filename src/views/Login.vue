@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import {fetchData} from "../api/index"
 export default {
   data(){
     return {
@@ -48,8 +49,18 @@ export default {
   methods:{
     logIn() {
       window.console.log("username:",this.form.username,"password:",this.form.password)
+    },
+    getData(){
+      fetchData({}).then(v => {
+        this.form.username = v.username
+        this.form.password = v.password
+      });
     }
-  }
+  },
+  created(){
+    this.getData()
+    window.console.log('created')
+  },
 }
 </script>
 
