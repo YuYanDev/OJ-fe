@@ -3,54 +3,77 @@
     <el-header>DjangoZ OJ</el-header>
     <el-main>
       <div>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <p class="note" v-show="message">{{ message }}</p>
-        <div>
-        <el-form-item label="账号" prop="username">
-          <el-input v-model="form.username" size="small" @keyup.enter.native="logIn"></el-input>
-        </el-form-item>
-        </div>
-        <div>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password" size="small" @keyup.enter.native="logIn"></el-input>
-        </el-form-item>
-        </div>
-        <div class='btn'>
-        <!-- <el-form-item class="btn"> -->
-          <el-button type="primary" size="small" @click="logIn">登录</el-button>
-        <!-- </el-form-item> -->
-        </div>
-      </el-form>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <p class="note" v-show="message">{{ message }}</p>
+          <div>
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="form.username" size="small" @keyup.enter.native="log_in"></el-input>
+            </el-form-item>
+          </div>
+          <div>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="form.password"
+                type="password"
+                size="small"
+                @keyup.enter.native="log_in"
+              ></el-input>
+            </el-form-item>
+          </div>
+          <div class="btn">
+            <!-- <el-form-item class="btn"> -->
+            <el-button type="primary" size="small" @click="log_in">登录</el-button>
+            <!-- </el-form-item> -->
+          </div>
+        </el-form>
       </div>
     </el-main>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { fetchData } from "../api/index";
 export default {
-  data(){
+  data() {
     return {
-      message: '',
+      message: "",
       form: {
-        username: '',
-        password: '',
+        username: "",
+        password: ""
       },
       rules: {
-        username: [
-          { required: true, message: '请输入账户', trigger: 'blur' },
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-        ],
-      },
+        username: [{ required: true, message: "请输入账户", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      }
+    };
+  },
+  methods: {
+    ...mapActions(["logIn"]),
+    log_in() {
+      window.console.log(
+        "username:",
+        this.form.username,
+        "password:",
+        this.form.password
+      );
+      this.logIn().then(()=>{
+        window.console.log("hello world");
+        this.$router.push({ path: "/home" });
+      });
+    },
+    getData() {
+      fetchData({}).then(v => {
+        this.form.username = v.username;
+        this.form.password = v.password;
+      });
     }
   },
-  methods:{
-    logIn() {
-      window.console.log("username:",this.form.username,"password:",this.form.password)
-    }
+  created() {
+    this.getData();
+    window.console.log("created");
   }
-}
+};
 </script>
 
 <style>
