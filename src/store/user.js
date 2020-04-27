@@ -1,28 +1,50 @@
-export default {
-    state: {
-        login_state: false,
-        username: 'hhh',
+import {STORAGE_KEY, USER_TYPE} from '@/utils/constants'
+import storage from '@/utils/storage'
+import types from '@/utils/types'
+import {getUserInfo} from "../api";
+
+const state = {
+    profile: {}
+}
+
+const getters = {
+    user: state => state.profile.user || {},
+    profile: state => state.profile.profile,
+    isAuthenticated: (state, getters) => {
+        return !!getters.user.user_id
     },
-    mutations: {
-        updateUsername(state, username) {
-            state.username = username
-        },
-        updateLoginState(state, login_state) {
-            state.login_state = login_state
-            window.console.log(state.username, state.login_state)
-        }
-    },
-    actions: {
-        async logIn({ commit }) {
-            const data = { status: 0, data: { username: 'test' } }
-            if (data && data.data) {
-                commit('updateUsername', data.data.username);
-                commit('updateLoginState', true)
-            }
-        },
-        logOut({ commit }) {
-            commit('updateUsername', '')
-            commit('updateLoginState', false)
-        }
+    isAdminRole: (state, getters) => {
+        return getters.user.role === USER_TYPE.ADMIN
     }
+}
+
+const mutations = {
+    [types.CHANGE_PROFILE](state, {profile}) {
+        state.profile = profile
+        storage.set(STORAGE_KEY.AUTHED, !!profile.user)
+    }
+}
+
+const actions = {
+    getProfile({commit}) {
+        getUserInfo().then(res => {
+            commit(types.CHANGE_PROFILE, {
+                profile: res.data.data || {}
+            })
+        })
+    },
+    clearProfile({commit}) {
+        commit(types.CHANGE_PROFILE, {
+            profile: {}
+        })
+        storage.clear()
+    }
+}
+
+
+export default {
+    state,
+    getters,
+    actions,
+    mutations
 }
