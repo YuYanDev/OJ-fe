@@ -20,7 +20,7 @@ export function getCaptcha() {
     return ajax('captcha', 'get')
 }
 
-export function getUserInfo() {
+export async function getUserInfo() {
     return ajax('profile', 'get')
 }
 

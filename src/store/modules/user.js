@@ -1,7 +1,8 @@
 import {STORAGE_KEY, USER_TYPE} from '@/utils/constants'
+import {getUserInfo} from "@/api/index";
 import storage from '@/utils/storage'
 import types from '@/utils/types'
-import {getUserInfo} from "../api";
+
 
 const state = {
     profile: {}
@@ -21,17 +22,20 @@ const getters = {
 const mutations = {
     [types.CHANGE_PROFILE](state, {profile}) {
         state.profile = profile
-        storage.set(STORAGE_KEY.AUTHED, !!profile.user)
+        storage.set(STORAGE_KEY.AUTHED, profile)
     }
 }
 
 const actions = {
-    getProfile({commit}) {
+    async getProfile({commit}) {
         getUserInfo().then(res => {
             commit(types.CHANGE_PROFILE, {
                 profile: res.data.data || {}
             })
         })
+    },
+    setProfile({commit}, profile) {
+        commit(types.CHANGE_PROFILE, {profile: profile})
     },
     clearProfile({commit}) {
         commit(types.CHANGE_PROFILE, {
@@ -46,5 +50,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 }

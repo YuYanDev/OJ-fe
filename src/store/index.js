@@ -1,23 +1,26 @@
 /* eslint-disable no-unused-vars */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user from './user'
+import user from './modules/user'
+import createPersistedState from "vuex-persistedstate";
+import * as Cookies from "js-cookie";
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
-const getter = {
-    username: (state,getters)=>{
-
-    },
-    login_state: false,
-}
 
 export default new Vuex.Store({
-  state: {
-  },
-  modules: {
-    user,
-  },
-  strict: debug
+    modules: {
+        user,
+    },
+    strict: debug,
+    plugins: [createPersistedState({
+        storage: {
+            getItem: (key) => Cookies.get(key),
+            // Please see https://github.com/js-cookie/js-cookie#json, on how to handle JSON.
+            setItem: (key, value) =>
+                Cookies.set(key, value, {expires: 3, secure: true}),
+            removeItem: (key) => Cookies.remove(key),
+        },
+    }),],
 })
 
