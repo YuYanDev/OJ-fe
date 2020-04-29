@@ -16,22 +16,27 @@
                     <el-menu-item index="2-4-1">选项1</el-menu-item>
                 </el-submenu>
             </el-submenu>
-            <div class="user-bg">
-                <div v-if="!isAuthenticated">
-                    <el-menu-item index="4">
-                        <el-button @click="dialogFormVisible = true">登录</el-button>
-                        <el-dialog :visible.sync="dialogFormVisible" center :lock-scroll="false" :show-close=true
+            <div>
+                <div v-if="!isAuthenticated" class="user-bg">
+                    <div class="user-bg">
+                        <el-button @click="dialogSignin = true" round>注册</el-button>
+                        <el-dialog :visible.sync="dialogSignin" center :lock-scroll="true" :show-close=true
                                    width="30%"
                                    top="20%">
-                            <Login></Login>
-                            <div slot="footer" class="dialog-footer">
-                                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                            </div>
+                            <Registered :dialog.sync="dialogSignin"></Registered>
                         </el-dialog>
-                    </el-menu-item>
+                    </div>
+                    <div class="user-bg">
+                        <el-button @click="dialogLogin = true" round>登录</el-button>
+                        <el-dialog :visible.sync="dialogLogin" center :lock-scroll="true" :show-close=true
+                                   width="30%"
+                                   top="20%">
+                            <Login :dialog.sync="dialogLogin"></Login>
+                        </el-dialog>
+                    </div>
                 </div>
                 <div v-else>
-                    <el-submenu index="4">
+                    <el-submenu index="4" class="user-bg">
                         <template slot="title">{{user.username}}</template>
                         <el-menu-item index="4-1">主页</el-menu-item>
                         <div v-if="isAdminRole">
@@ -52,11 +57,12 @@
     import Login from "../views/Login";
     import storage from '@/utils/storage'
     import {STORAGE_KEY} from '@/utils/constants'
+    import Registered from "../views/Registered";
 
 
     export default {
         name: "TopBar",
-        components: {Login},
+        components: {Login, Registered},
         props: {
             msg: String
         },
@@ -68,7 +74,8 @@
         },
         data() {
             return {
-                dialogFormVisible: false
+                dialogLogin: false,
+                dialogSignin: false
             }
         },
         methods: {
@@ -77,7 +84,7 @@
                 logout().then(() => {
                     this.clearProfile()
                 })
-            }
+            },
         },
         computed: {
             ...mapGetters(['user', 'isAuthenticated', 'isAdminRole']),
@@ -96,6 +103,6 @@
 
     .user-bg {
         float: right;
-        right: 10px;
+        line-height: 60px;
     }
 </style>

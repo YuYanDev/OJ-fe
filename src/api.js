@@ -12,6 +12,10 @@ export async function login(body) {
     return ajax('login', 'post', {data: body});
 }
 
+export async function sign_up(body) {
+    return ajax('sign_up', 'post', {data: body});
+}
+
 export async function logout() {
     return ajax('logout', 'post',);
 }
@@ -45,7 +49,7 @@ function ajax(url, method, options) {
             data
         }).then(res => {
             // API正常返回(status=20x), 是否错误通过有无error判断
-            if (url !== "captcha" && res.data.status !== 0) {
+            if (res.data && res.data.status !== 0) {
                 Vue.prototype.$message({
                     showClose: true,
                     message: res.data.message,
@@ -65,7 +69,7 @@ function ajax(url, method, options) {
         }, res => {
             // API请求异常，一般为Server error 或 network error
             reject(res)
-            Vue.prototype.$error(res.data.message)
+            Vue.prototype.$message({message: res.data.message, type: 'error'})
         })
     })
 }
