@@ -17,13 +17,14 @@
                 </el-submenu>
             </el-submenu>
             <div>
-                <div v-if="!isAuthenticated" class="user-bg">
+
+                <div v-if="!isAuthenticated" class="user-bg you-lan-se-bian-kuang-de-div">
                     <div class="user-bg">
-                        <el-button @click="dialogSignin = true" round>注册</el-button>
-                        <el-dialog :visible.sync="dialogSignin" center :lock-scroll="true" :show-close=true
+                        <el-button @click="dialogSignIn = true" round>注册</el-button>
+                        <el-dialog :visible.sync="dialogSignIn" center :lock-scroll="true" :show-close=true
                                    width="30%"
                                    top="20%">
-                            <Registered :dialog.sync="dialogSignin"></Registered>
+                            <Registered :dialog.sync="dialogSignIn"></Registered>
                         </el-dialog>
                     </div>
                     <div class="user-bg">
@@ -75,7 +76,7 @@
         data() {
             return {
                 dialogLogin: false,
-                dialogSignin: false
+                dialogSignIn: false
             }
         },
         methods: {
@@ -104,5 +105,8 @@
     .user-bg {
         float: right;
         line-height: 60px;
+    }
+    you-lan-se-bian-kuang-de-div :focus{
+        outline:none
     }
 </style>

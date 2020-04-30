@@ -28,13 +28,19 @@
         </div>
         <div>
             <el-form-item :inline="true" label="验证码" prop="auth_code">
-                <div style="width: 72%">
-                    <el-input label-position="left"
-                              v-model="form.auth_code"
-                              size="small"
-                              @keyup.enter.native="sign_up"
-                    ></el-input>
-                    <img label-position="right" :src="captcha" @click="getCaptchaSrc">
+                <div>
+                    <el-row type="flex">
+                        <el-col :span="18">
+                        <el-input
+                                  v-model="form.auth_code"
+                                  size="small"
+                                  @keyup.enter.native="sign_up"
+                        ></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                        <img  :src="captcha" @click="getCaptchaSrc">
+                        </el-col>
+                    </el-row>
                 </div>
 
             </el-form-item>
@@ -117,7 +123,7 @@
                                     message: res.data.message,
                                     type: 'success'
                                 });
-                                this.$emit('update:dialog',false)
+                                this.$emit('update:dialog', false)
                             }
                         })
                     }
